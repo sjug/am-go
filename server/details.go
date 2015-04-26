@@ -22,7 +22,7 @@ func userHandler(w http.ResponseWriter, r *http.Request, ps map[string]string) {
 		http.Error(w, "Please enter a numeric collector number.", http.StatusInternalServerError)
 		return
 	}
-	resp := database
+	resp := &CollectorDetails{}
 	json, err := json.Marshal(resp)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
