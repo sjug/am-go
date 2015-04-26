@@ -6,3 +6,8 @@ type CollectorDetails struct {
 	CashBalance   int    `json:"cashBalance"`
 	DreamBalance  int    `json:"dreamBalance"`
 }
+
+// CollectorTier type holds collector tier
+type CollectorTier struct {
+	CollectorTier string `json:"tier"`
+}
