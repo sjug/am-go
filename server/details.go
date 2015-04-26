@@ -13,10 +13,14 @@ import (
 func userHandler(w http.ResponseWriter, r *http.Request, ps map[string]string) {
 	num, err := strconv.Atoi(ps["num"])
 	if err != nil || num < 1 {
-		http.Error(w, "Please enter a numeric collector number.", http.StatusInternalServerError)
+		http.Error(w, "Please enter a valid collector number.", http.StatusInternalServerError)
 		return
 	}
-	resp, _ := database.GetUserDetailsFromNumber(num)
+	resp, err := database.GetUserDetailsFromNumber(num)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNoContent)
+		return
+	}
 	json, err := json.Marshal(resp)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
