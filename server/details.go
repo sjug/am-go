@@ -11,8 +11,9 @@ import (
 
 // CollectorDetails type holds collector data
 type CollectorDetails struct {
-	CollectorNumber int    `json:"number"`
-	CollectorName   string `json:"name"`
+	CollectorName string `json:"collectorName"`
+	CashBalance   int    `json:"cashBalance"`
+	DreamBalance  int    `json:"dreamBalance"`
 }
 
 func userHandler(w http.ResponseWriter, r *http.Request, ps map[string]string) {
@@ -21,9 +22,7 @@ func userHandler(w http.ResponseWriter, r *http.Request, ps map[string]string) {
 		http.Error(w, "Please enter a numeric collector number.", http.StatusInternalServerError)
 		return
 	}
-	resp := &CollectorDetails{
-		CollectorNumber: num,
-		CollectorName:   "George"}
+	resp := database
 	json, err := json.Marshal(resp)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
