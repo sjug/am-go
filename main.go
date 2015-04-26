@@ -10,6 +10,13 @@ import (
 )
 
 func main() {
+	var err error
+	err = database.Init()
+	if err != nil {
+		log.Fatal("Couldn't initialize database: " + err.Error())
+		return
+	}
+
 	const port = ":8080"
 	httpRouter := httptreemux.New()
 	server.InitDetails(httpRouter)
