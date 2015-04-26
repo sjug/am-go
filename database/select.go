@@ -9,6 +9,7 @@ const stmtSelectUserByNumber = "SELECT name, cash, dream FROM users WHERE number
 
 // User database structure
 type User struct {
+	number       int
 	name         string
 	dreamBalance int
 	cashBalance  int
@@ -19,13 +20,13 @@ func SelectUserByNumber(num int) (*User, error) {
 	tempUser := User{}
 	stmt, err := db.Prepare(stmtSelectUserByNumber)
 	if err != nil {
-		return &tempUser, err
+		return nil, err
 	}
 	defer stmt.Close()
 
-	err = stmt.QueryRow(1).Scan(&tempUser)
+	err = stmt.QueryRow(1).Scan(&tempUser.number, &tempUser.name, &tempUser.dreamBalance, &tempUser.cashBalance)
 	if err != nil {
-		return &tempUser, err
+		return nil, err
 	}
 	return &tempUser, nil
 }
