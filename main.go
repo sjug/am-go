@@ -10,10 +10,10 @@ import (
 
 func main() {
 	const port = ":8080"
-	router := httptreemux.New()
-	server.InitDetails(router)
-	//server.InitTier(router)
+	httpRouter := httptreemux.New()
+	server.InitDetails(httpRouter)
+	server.InitTier(httpRouter)
 
 	log.Println("Listening on port", port)
-	log.Fatal(http.ListenAndServe(port, router))
+	log.Fatal(http.ListenAndServe(port, httpRouter))
 }
