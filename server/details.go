@@ -8,7 +8,6 @@ import (
 
 	"github.com/dimfeld/httptreemux"
 	"github.com/sjug/am-go/database"
-	"github.com/sjug/am-go/structure"
 )
 
 func userHandler(w http.ResponseWriter, r *http.Request, ps map[string]string) {

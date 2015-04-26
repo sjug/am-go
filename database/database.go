@@ -16,18 +16,22 @@ func GetUserDetailsFromNumber(num int) (*structure.CollectorDetails, error) {
 		log.Fatal(err)
 	}
 	defer db.Close()
+
 	err = db.Ping()
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	stmt, err := db.Prepare(stmtGetUserDetailsFromNumber)
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer stmt.Close()
+
 	tempCollector := structure.CollectorDetails{}
 	err = stmt.QueryRow(num).Scan(&tempCollector.CollectorName, &tempCollector.DreamBalance, &tempCollector.CashBalance)
 	if err != nil {
-		log.Fatal(err)
+		return &tempCollector, err
 	}
 	return &tempCollector, nil
 }
