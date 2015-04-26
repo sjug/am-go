@@ -7,14 +7,9 @@ import (
 	"strconv"
 
 	"github.com/dimfeld/httptreemux"
+	"github.com/sjug/am-go/database"
+	"github.com/sjug/am-go/structure"
 )
-
-// CollectorDetails type holds collector data
-type CollectorDetails struct {
-	CollectorName string `json:"collectorName"`
-	CashBalance   int    `json:"cashBalance"`
-	DreamBalance  int    `json:"dreamBalance"`
-}
 
 func userHandler(w http.ResponseWriter, r *http.Request, ps map[string]string) {
 	num, err := strconv.Atoi(ps["num"])
@@ -22,7 +17,7 @@ func userHandler(w http.ResponseWriter, r *http.Request, ps map[string]string) {
 		http.Error(w, "Please enter a numeric collector number.", http.StatusInternalServerError)
 		return
 	}
-	resp := &CollectorDetails{}
+	resp, _ := database.GetUserDetailsFromNumber(num)
 	json, err := json.Marshal(resp)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

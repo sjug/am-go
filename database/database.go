@@ -3,18 +3,13 @@ package database
 import (
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/sjug/am-go/structure"
 	"log"
 )
 
 const stmtGetUserDetailsFromNumber = "SELECT mem.firstName, acc.dreamBalance, acc.cashBalance FROM `apiPOC`.`ACCOUNT` acc JOIN `apiPOC`.`MEMBER` mem ON acc.collectorNumber = mem.collectorNumber WHERE acc.collectorNumber = ?"
 
-type Collector struct {
-	firstName    string
-	dreamBalance int
-	cashBalance  int
-}
-
-func GetUserDetailsFromNumber(num int) (*Collector, error) {
+func GetUserDetailsFromNumber(num int) (*structure.CollectorDetails, error) {
 	db, err := sql.Open("mysql",
 		"test:test_P455@tcp(127.0.0.1:3306)/apiPOC")
 	if err != nil {
@@ -29,8 +24,8 @@ func GetUserDetailsFromNumber(num int) (*Collector, error) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	tempCollector := Collector{}
-	err = stmt.QueryRow(num).Scan(&tempCollector.firstName, &tempCollector.dreamBalance, &tempCollector.cashBalance)
+	tempCollector := structure.CollectorDetails{}
+	err = stmt.QueryRow(num).Scan(&tempCollector.CollectorName, &tempCollector.DreamBalance, &tempCollector.CashBalance)
 	if err != nil {
 		log.Fatal(err)
 	}

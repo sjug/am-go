@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/dimfeld/httptreemux"
-	"github.com/sjug/am-go/database"
 	"github.com/sjug/am-go/server"
 )
 
