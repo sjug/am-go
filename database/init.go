@@ -8,9 +8,15 @@ import (
 
 // Init func initializes mysql db connection
 func Init() error {
-	con, err := sql.Open("mysql", store.user+":"+store.password+"@/"+store.database)
-	defer con.Close()
+	db, err := sql.Open("mysql", "user:password@tcp(127.0.0.1:3306)/hello")
 	if err != nil {
 		return err
 	}
+	defer db.Close()
+
+	err = db.Ping()
+	if err != nil {
+		return err
+	}
+	return nil
 }
