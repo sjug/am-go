@@ -6,6 +6,8 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
+var db *sql.DB
+
 // Init func initializes mysql db connection
 func Init() error {
 	db, err := sql.Open("mysql", "user:password@tcp(127.0.0.1:3306)/hello")
