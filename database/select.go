@@ -5,7 +5,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-const stmtSelectUserByNumber = "SELECT name, cash, dream FROM users WHERE number = ?"
+const stmtSelectUserByNumber = "SELECT name, dream, cash FROM users WHERE number = ?"
 
 // User database structure
 type User struct {
@@ -24,7 +24,7 @@ func SelectUserByNumber(num int) (*User, error) {
 	}
 	defer stmt.Close()
 
-	err = stmt.QueryRow(1).Scan(&tempUser.number, &tempUser.name, &tempUser.dreamBalance, &tempUser.cashBalance)
+	err = stmt.QueryRow(1).Scan(&tempUser.name, &tempUser.dreamBalance, &tempUser.cashBalance)
 	if err != nil {
 		return nil, err
 	}
