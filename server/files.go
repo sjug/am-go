@@ -1,7 +1,6 @@
 package server
 
 import (
-	"html/template"
 	"net/http"
 	"path/filepath"
 
@@ -9,13 +8,15 @@ import (
 )
 
 func pageHandler(w http.ResponseWriter, r *http.Request, ps map[string]string) {
-	file := "content/" + ps["page"]
-	t, _ := template.ParseFiles(file)
-	t.Execute(w, nil)
+	//file := "content/" + ps["page"]
+	//t, _ := template.ParseFiles(file)
+	//t.Execute(w, nil)
+	http.ServeFile(w, r, filepath.Join("content/", ps["file"]))
+	return
 }
 
-func staticHandler(w http.ResponseWriter, r *http.Request, params map[string]string) {
-	http.ServeFile(w, r, filepath.Join("content/", params["file"]))
+func staticHandler(w http.ResponseWriter, r *http.Request, ps map[string]string) {
+	http.ServeFile(w, r, filepath.Join("content/", ps["file"]))
 	return
 }
 
