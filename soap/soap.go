@@ -3,6 +3,7 @@ package soap
 import (
 	"bytes"
 	"encoding/xml"
+	"errors"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -72,6 +73,9 @@ func GetTierFromSoap(number int) (*structure.CollectorTier, error) {
 	var c CollectorResponse
 	xml.Unmarshal([]byte(newResp), &c)
 	tempCollector := structure.CollectorTier{CollectorTier: c.Tier}
+	if c.Tier == "" {
+		return &tempCollector, errors.New("Tier missing")
+	}
 	return &tempCollector, nil
 }
 
