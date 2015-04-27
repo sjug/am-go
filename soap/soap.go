@@ -4,7 +4,6 @@ import (
 	"encoding/xml"
 	"fmt"
 	"regexp"
-	"strconv"
 
 	"github.com/sjug/am-go/structure"
 )
