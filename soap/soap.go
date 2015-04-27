@@ -3,7 +3,6 @@ package soap
 import (
 	"bytes"
 	"encoding/xml"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -68,9 +67,8 @@ type CollectorContext struct {
 // GetTierFromSoap function calls tier soap service and gets parsed for tier info
 func GetTierFromSoap(number int) (*structure.CollectorTier, error) {
 	resp, _ := callSoap(number)
-	r, _ := regexp.Compile(`<Collector[\s\S]+>`)
+	r, _ := regexp.Compile(`<Collector[\s\S]*?">`)
 	newResp := r.FindString(resp)
-	fmt.Println(newResp)
 	var c CollectorResponse
 	xml.Unmarshal([]byte(newResp), &c)
 	tempCollector := structure.CollectorTier{CollectorTier: c.Tier}
@@ -105,7 +103,6 @@ func callSoap(number int) (string, error) {
 	req.Header.Add("Content-Type", "text/xml;charset=UTF-8")
 	req.Header.Add("SOAPAction", "\"getCollectorDetails\"")
 	req.ContentLength = int64(len(string(xmlstring)))
-	fmt.Println(req)
 
 	resp, resperr := client.Do(req)
 	if err != nil {
