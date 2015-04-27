@@ -26,7 +26,6 @@ func userHandler(w http.ResponseWriter, r *http.Request, ps map[string]string) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
 	fmt.Println("Responded with ", string(json))
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(json)

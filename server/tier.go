@@ -16,19 +16,16 @@ func userTierHandler(w http.ResponseWriter, r *http.Request, ps map[string]strin
 		http.Error(w, "Please enter a valid collector number.", http.StatusInternalServerError)
 		return
 	}
-
-	resp, err := soap.GetTierFromSoap()
+	resp, err := soap.GetTierFromSoap(num)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNoContent)
 		return
 	}
-
 	json, err := json.Marshal(resp)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
 	fmt.Println("Responded with ", string(json))
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(json)
