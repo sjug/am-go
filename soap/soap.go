@@ -62,9 +62,8 @@ func GetTierFromSoap(number int) (*structure.CollectorTier, error) {
 	r, _ := regexp.Compile(`<Collector[\s\S]+>`)
 	newResp := r.FindString(resp)
 	var c CollectorResponse
-
 	xml.Unmarshal([]byte(newResp), &c)
-	tempCollector := structure.CollectorTier{c.Tier}
+	tempCollector := structure.CollectorTier{CollectorTier: c.Tier}
 	return &tempCollector, nil
 }
 
