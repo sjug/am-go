@@ -13,6 +13,7 @@ func main() {
 	httpRouter := httptreemux.New()
 	server.InitDetails(httpRouter)
 	server.InitTier(httpRouter)
+	server.InitStatic(httpRouter)
 
 	log.Println("Listening on port", port)
 	log.Fatal(http.ListenAndServe(port, httpRouter))
