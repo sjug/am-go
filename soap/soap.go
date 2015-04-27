@@ -3,6 +3,7 @@ package soap
 import (
 	"bytes"
 	"encoding/xml"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -48,7 +49,7 @@ type TierRequest struct {
 
 // TierBody is an emtpy container with the GetCollectorProfile struct
 type TierBody struct {
-	GetCollectorProfiles GetCollectorProfile `Collectorxml:"typ:GetCollectorProfileRequest"`
+	GetCollectorProfiles GetCollectorProfile `xml:"typ:GetCollectorProfileRequest"`
 }
 
 // GetCollectorProfile struct has the context and collector number
@@ -69,6 +70,7 @@ func GetTierFromSoap(number int) (*structure.CollectorTier, error) {
 	resp, _ := callSoap(number)
 	r, _ := regexp.Compile(`<Collector[\s\S]+>`)
 	newResp := r.FindString(resp)
+	fmt.Println(newResp)
 	var c CollectorResponse
 	xml.Unmarshal([]byte(newResp), &c)
 	tempCollector := structure.CollectorTier{CollectorTier: c.Tier}
@@ -93,22 +95,23 @@ func callSoap(number int) (string, error) {
 		return "error", err
 	}
 	xmlstring = []byte(xml.Header + string(xmlstring))
-	client := &http.Client{}
+	client := http.Client{}
 	body := nopCloser{bytes.NewBufferString(string(xmlstring))}
-	req, err := http.NewRequest("PUT", "http://example.com/someresource", body)
+	req, err := http.NewRequest("PUT", "http://www.int-test.one.ets.app.loyalty.com/collector/services/CollectorService", body)
 	if err != nil {
-		return "error", err
+		return "Couldn't form http request", err
 	}
 	req.Header.Add("Accept", "application/xml")
-	req.Header.Add("Content-Type", "application/xml")
-	//req.ContentLength = int64(len(string(msgbody)))
+	req.Header.Add("Content-Type", "text/xml;charset=UTF-8")
+	req.Header.Add("SOAPAction", "\"getCollectorDetails\"")
+	req.ContentLength = int64(len(string(xmlstring)))
+	fmt.Println(req)
 
 	resp, resperr := client.Do(req)
 	if err != nil {
-		return "error", resperr
+		return "HTTP response is broken", resperr
 	}
 
 	strResp, _ := ioutil.ReadAll(resp.Body)
-	//resp := `<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body><GetCollectorProfileResponse ETSServiceVersion="collector-2.12.17-20150306" xmlns="http://ws.loyalty.com/tp/ets/2008/04/01/collector/types" xmlns:ns2="http://ws.loyalty.com/tp/ets/2008/02/01/common" xmlns:ns3="http://ws.loyalty.com/tp/ets/2008/04/01/collector-common" xmlns:ns4="http://ws.loyalty.com/tp/ets/2008/04/01/collector" xmlns:ns5="http://ws.loyalty.com/tp/ets/2008/02/01/email" xmlns:ns6="http://ws.loyalty.com/tp/ets/2008/02/01/account"><ns4:MosaikTier SegmentPrefix="BMPH" SegmentSuffix="5C"/><ns4:MosaikTier SegmentPrefix="BMWJ" SegmentSuffix="5C"/><ns4:Person DateOfBirth="1969-11-30-05:00" FirstName="LMGCANSAVE" Gender="F" LastName="L3R3Z5" Prefix="MS" Suffix=" "><ns4:HomeAddress City="NORTH YORK" Country="CAN" PostalCode="M2P2B7" Province="ON" Status="0" StreetAddress1="4110 YONGE STREET" StreetAddress2="SUITE 200"/><ns4:HomePhone>4169804860</ns4:HomePhone><ns4:BusinessPhone>4169804867</ns4:BusinessPhone></ns4:Person></Collector><Balance Amount="31980708" LastMaintenanceTime="2014-09-12T00:28:56-04:00"/><CashMilesBalance Amount="3902" LastMaintenanceTime="2011-07-13T10:54:11-04:00"/></GetCollectorProfileResponse></soap:Body></soap:Envelope><Collector AMCashEligible="true" AMCashRegion="2" AccountStatus="A" AccountTier="G" AccountType="I" AddressType="H" CollectorNumber="50000131287" EnrollSourceCodeLevel1="LMGCAN" EnrollSourceCodeLevel2="SAVE" HouseholdSize="4" IncomeLevel="4" LanguageCode="fr-CA" MailProfile="0" NumberOfCards="2" StatementsPerYear=" " xsi:type="ns4:ConsumerCollectorType" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">`
 	return string(strResp), nil
 }
