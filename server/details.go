@@ -34,5 +34,5 @@ func userHandler(w http.ResponseWriter, r *http.Request, ps map[string]string) {
 // InitDetails intializes routing for details path
 func InitDetails(router *httptreemux.TreeMux) {
 	// Collector details
-	router.GET("/user/:num", userHandler)
+	router.GET("/collector/:num", userHandler)
 }

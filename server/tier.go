@@ -33,5 +33,5 @@ func userTierHandler(w http.ResponseWriter, r *http.Request, ps map[string]strin
 
 // InitTier func sets up routing for tier path
 func InitTier(router *httptreemux.TreeMux) {
-	router.GET("/user/tier/:num", userTierHandler)
+	router.GET("/collector/tier/:num", userTierHandler)
 }
