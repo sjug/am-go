@@ -67,7 +67,10 @@ type CollectorContext struct {
 
 // GetTierFromSoap function calls tier soap service and gets parsed for tier info
 func GetTierFromSoap(number int) (*structure.CollectorTier, error) {
-	resp, _ := callSoap(number)
+	resp, err := callSoap(number)
+	if err != nil {
+		return nil, err
+	}
 	r, _ := regexp.Compile(`<Collector[\s\S]*?">`)
 	newResp := r.FindString(resp)
 	var c CollectorResponse
@@ -108,11 +111,14 @@ func callSoap(number int) (string, error) {
 	req.Header.Add("SOAPAction", "\"getCollectorDetails\"")
 	req.ContentLength = int64(len(string(xmlstring)))
 
-	resp, resperr := client.Do(req)
+	resp, err := client.Do(req)
 	if err != nil {
-		return "HTTP response is broken", resperr
+		return "HTTP response is broken", err
 	}
 
-	strResp, _ := ioutil.ReadAll(resp.Body)
+	strResp, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return "Error parsing response body", err
+	}
 	return string(strResp), nil
 }

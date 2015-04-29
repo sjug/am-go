@@ -2,16 +2,18 @@ package database
 
 import (
 	"database/sql"
-	_ "github.com/go-sql-driver/mysql"
-	"github.com/sjug/am-go/structure"
 	"log"
+
+	_ "github.com/go-sql-driver/mysql" // MySQL driver
+	"github.com/sjug/am-go/structure"
 )
 
 const stmtGetUserDetailsFromNumber = "SELECT mem.firstName, acc.dreamBalance, acc.cashBalance FROM `apiPOC`.`ACCOUNT` acc JOIN `apiPOC`.`MEMBER` mem ON acc.collectorNumber = mem.collectorNumber WHERE acc.collectorNumber = ?"
 
+// GetUserDetailsFromNumber gets the user details via MySQL connection
 func GetUserDetailsFromNumber(num int) (*structure.CollectorDetails, error) {
 	db, err := sql.Open("mysql",
-		"test:test_P455@tcp(127.0.0.1:3306)/apiPOC")
+		"root:password@tcp(tor-ovn-7004.loyalty.com:3306)/apiPOC")
 	if err != nil {
 		log.Fatal(err)
 	}

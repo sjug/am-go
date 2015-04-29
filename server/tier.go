@@ -18,7 +18,7 @@ func userTierHandler(w http.ResponseWriter, r *http.Request, ps map[string]strin
 	}
 	resp, err := soap.GetTierFromSoap(num)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusNoContent)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	json, err := json.Marshal(resp)
