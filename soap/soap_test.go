@@ -5,6 +5,7 @@ import (
 	"regexp"
 	"testing"
 
+	"github.com/sjug/am-go/structure"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -111,6 +112,59 @@ func TestRegexMatch(t *testing.T) {
 				actualResponse := regexResponse(fullReponse)
 				So(actualResponse, ShouldEqual, mockResponse)
 			})
+		})
+	})
+
+}
+
+func TestParseXML(t *testing.T) {
+	Convey("Given a collector response", t, func() {
+		resp := `<Collector
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      AMCashEligible="true"
+      AMCashRegion="2"
+      AccountStatus="A"
+      AccountTier="B"
+      AccountType="I"
+      AddressType="H"
+      CollectorNumber="50001366830"
+      EnrollSourceCodeLevel1="PREA01"
+      EnrollSourceCodeLevel2="TEST"
+      LanguageCode="fr-CA"
+      MailProfile="0"
+      NumberOfCards="1"
+      xsi:type="ns4:ConsumerCollectorType">
+      <ns4:MosaikTier SegmentPrefix="BMPH" SegmentSuffix="3E" />
+      <ns4:Person
+        DateOfBirth="1983-02-22-05:00"
+        FirstName="ANGELIQUE"
+        Gender="F"
+        LastName="LAURENT"
+        Prefix="MS" Suffix=" ">
+        <ns4:HomeAddress
+          City="TORONTO"
+          Country="CAN"
+          PostalCode="M5G2L1"
+          Province="ON"
+          Status="0"
+          StreetAddress1="600-438 UNIVERSITY AVE" />
+        <ns4:HomePhone>4165522367</ns4:HomePhone>
+        <ns4:BusinessPhone>4165522367</ns4:BusinessPhone>
+      </ns4:Person>
+    </Collector>`
+		So(resp, ShouldHaveSameTypeAs, "text")
+
+		Convey("Response object should contain unmarshaled XML data", func() {
+			var responseObject CollectorResponse
+			xml.Unmarshal([]byte(resp), &responseObject)
+			So(responseObject.Tier, ShouldNotBeBlank)
+
+			Convey("Collector Tier object should match that returned by parseXML function", func() {
+				mockCollectorTier := structure.CollectorTier{CollectorTier: responseObject.Tier}
+				realCollectorTier, _ := parseXML(resp)
+				So(realCollectorTier, ShouldResemble, &mockCollectorTier)
+			})
+
 		})
 	})
 
