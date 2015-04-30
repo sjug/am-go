@@ -67,22 +67,23 @@ type CollectorContext struct {
 
 // GetTierFromSoap function calls tier soap service and gets parsed for tier info
 func GetTierFromSoap(number int) (*structure.CollectorTier, error) {
-	resp, err := callSoap(number)
+	xmlstring, err := encodeRequest(number)
 	if err != nil {
 		return nil, err
 	}
-	r, _ := regexp.Compile(`<Collector[\s\S]*?">`)
-	newResp := r.FindString(resp)
-	var c CollectorResponse
-	xml.Unmarshal([]byte(newResp), &c)
-	tempCollector := structure.CollectorTier{CollectorTier: c.Tier}
-	if c.Tier == "" {
-		return &tempCollector, errors.New("Tier missing")
+	resp, err := callSoap(xmlstring)
+	if err != nil {
+		return nil, err
 	}
-	return &tempCollector, nil
+	newResp := regexResponse(resp)
+	collectorTier, err := parseXML(newResp)
+	if err != nil {
+		return nil, err
+	}
+	return collectorTier, nil
 }
 
-func callSoap(number int) (string, error) {
+func encodeRequest(number int) ([]byte, error) {
 	a := &TierRequest{
 		NsEnv:  "http://schemas.xmlsoap.org/soap/envelope/",
 		NsType: "http://ws.loyalty.com/tp/ets/2008/04/01/collector/types",
@@ -94,12 +95,15 @@ func callSoap(number int) (string, error) {
 					Language: "en-CA"},
 				Number: number,
 			}}}
-
 	xmlstring, err := xml.MarshalIndent(a, "", "  ")
 	if err != nil {
-		return "error", err
+		return nil, err
 	}
 	xmlstring = []byte(xml.Header + string(xmlstring))
+	return xmlstring, nil
+}
+
+func callSoap(xmlstring []byte) (string, error) {
 	client := http.Client{}
 	body := nopCloser{bytes.NewBufferString(string(xmlstring))}
 	req, err := http.NewRequest("PUT", "http://www.int-test.one.ets.app.loyalty.com/collector/services/CollectorService", body)
@@ -121,4 +125,20 @@ func callSoap(number int) (string, error) {
 		return "Error parsing response body", err
 	}
 	return string(strResp), nil
+}
+
+func regexResponse(oldResp string) (newResp string) {
+	r, _ := regexp.Compile(`<Collector[\s\S]*?">`)
+	newResp = r.FindString(oldResp)
+	return
+}
+
+func parseXML(resp string) (*structure.CollectorTier, error) {
+	var c CollectorResponse
+	xml.Unmarshal([]byte(resp), &c)
+	tempCollector := structure.CollectorTier{CollectorTier: c.Tier}
+	if c.Tier == "" {
+		return &tempCollector, errors.New("Tier missing")
+	}
+	return &tempCollector, nil
 }
