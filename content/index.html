@@ -1,16 +1,27 @@
-<html ng-app>
+<html ng-app="userApp">
+
 <head>
-	<title>API Front</title>
-	<link rel="stylesheet" href="css/bootstrap.min.css">
+  <script src="js/angular.min.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/controllers/main.js"></script>
 </head>
-<body>
-	<div class="jumbotron">
-		<h1>apiPOC test</h1>
-	</div>
-	<div class="container">
-		<input type="text" placeholder="type here" ng-model="yes">
-		<p>Is Angular working? <span ng-bind="yes"></span></p>
-	</div>
-<script src="js/angular.min.js"></script>
+
+<body ng-controller="MainCtrl">
+  <div>
+    <div ng-show="userNum">Hello, {{resp.collectorName}}! Welcome to Air Miles! You have a cash balance of {{resp.cashBalance}} miles, and a dream balance of {{resp.dreamBalance}}.</div>
+    <div ng-hide="userNum">No user logged in</div>
+  </div>
+
+  <div ng-controller="LoginCtrl" style="float:right;padding:5px;border:1px solid #ccc;background:#eee;">
+    <div ng-hide="user">
+      <input ng-model="name" placeholder="Collector Number">
+    </div>
+    <div>
+      <button ng-show="user" ng-click="logout()">Logout</button>
+      <button ng-hide="user" ng-click="login()">Login</button>
+    </div>
+  </div>
+
 </body>
+
 </html>
