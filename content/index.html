@@ -1,27 +1,86 @@
-<html ng-app="userApp">
 
-<head>
-  <script src="js/angular.min.js"></script>
-  <script src="js/app.js"></script>
-  <script src="js/controllers/main.js"></script>
-</head>
+<!DOCTYPE html>
+<html lang="en" ng-app="userApp">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="Sample bootstrapped front">
+    <meta name="author" content="Sebastian">
 
-<body ng-controller="MainCtrl">
-  <div>
-    <div ng-show="userNum">Hello, {{resp.collectorName}}! Welcome to Air Miles! You have a cash balance of {{resp.cashBalance}} miles, and a dream balance of {{resp.dreamBalance}}.</div>
-    <div ng-hide="userNum">No user logged in</div>
-  </div>
+    <title>apiPOC Demo Front</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/jumbotron.css" rel="stylesheet">
+    <script src="js/angular.min.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/controllers/main.js"></script>
+  </head>
 
-  <div ng-controller="LoginCtrl" style="float:right;padding:5px;border:1px solid #ccc;background:#eee;">
-    <div ng-hide="user">
-      <input ng-model="name" placeholder="Collector Number">
+  <body ng-controller="MainCtrl">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">apiPOC project</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse" ng-controller="LoginCtrl">
+          <form class="navbar-form navbar-right">
+            <div class="form-group" ng-hide="user">
+              <input type="text" ng-model="name" placeholder="Collector Number" class="form-control">
+            </div>
+            <div class="form-group" ng-show="user">
+              <span class="label label-default">{{user}}</span>
+            </div>
+            <button ng-hide="user" ng-click="login()" type="submit" class="btn btn-success">Sign in</button>
+            <button ng-show="user" ng-click="logout()" type="submit" class="btn btn-warning">Sign out</button>
+          </form>
+        </div><!--/.navbar-collapse -->
+      </div>
+    </nav>
+
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+      <div class="container" ng-hide="user">
+        <h1>Welcome to Air Miles!</h1>
+        <p>This is just a sample front end login example using our new high performance back end API technology. With this technology our products can become so much faster and more responsive to the user.</p>
+        <p><a class="btn btn-primary btn-lg" href="https://golang.org/" role="button">Learn more &raquo;</a></p>
+      </div>
+      <div class="container" ng-show="user">
+        <h1>Hello, {{resp.collectorName}}!</h1>
+        <p>Your current cash balance is <span class="label label-success">{{resp.cashBalance}}</span> and your dream balance is <span class="label label-info">{{resp.dreamBalance}}</span>.</p>
+        <p><a class="btn btn-primary btn-lg" href="#" role="button">Earn more &raquo;</a></p>
+      </div>
     </div>
-    <div>
-      <button ng-show="user" ng-click="logout()">Logout</button>
-      <button ng-hide="user" ng-click="login()">Login</button>
-    </div>
-  </div>
 
-</body>
+    <div class="container">
+      <!-- Example row of columns -->
+      <div class="row">
+        <div class="col-md-4">
+          <h2>Heading</h2>
+          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+        </div>
+      </div>
 
+      <hr>
+
+      <footer>
+        <p>&copy; Air Miles 2015</p>
+      </footer>
+    </div> <!-- /container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <!-- <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script> -->
+  </body>
 </html>

@@ -4,15 +4,18 @@ angular.module('userApp')
   .controller('MainCtrl', function($scope, $http) {
     $scope.resp = [];
     $scope.user = null;
-    $http.get('collector/'+$scope.userNum).success(function(data) {
-      $scope.user = data;
-    })
+    $scope.update = function() {
+      $http.get('collector/'+$scope.user).success(function(data) {
+        $scope.resp = data;
+      })
+  	}
   	$scope.$on( 'login', function(event, name) {
   		$scope.user = name;
   	})
   	$scope.$on( 'logout', function(event) {
   		$scope.user = null;
   	})
+    $scope.$watch( 'user', $scope.update);
   })
   .controller('RestCtrl', function($scope, $http) {
     $scope.userNum = null;
