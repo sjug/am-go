@@ -17,9 +17,6 @@ angular.module('userApp')
   	})
     $scope.$watch( 'user', $scope.update);
   })
-  .controller('RestCtrl', function($scope, $http) {
-    $scope.userNum = null;
-  })
   .controller('LoginCtrl', function($scope) {
   	$scope.name = '';
   	$scope.login = function() {
